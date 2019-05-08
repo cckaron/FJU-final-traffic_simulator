@@ -7,7 +7,7 @@ class Car extends Thread {
   int direct;
   float[] startPos = new float [2];
   float[] nextPos = new float [2];
-  float speed = 15;
+  float speed = 5;
   boolean live;
   LinkedList<float[]> pathST=new LinkedList<float[]>();
   LinkedList<Integer> directST=new LinkedList<Integer>();
@@ -45,7 +45,7 @@ class Car extends Thread {
   }
 
   void go() {
-    if (x == 1000 && y == 1000){
+    if (x == 700 && y == 580) {
       this.speed = 0;
     }
     keepDistance();
@@ -67,16 +67,30 @@ class Car extends Thread {
 
   void keepDistance() {
     for (Car car : carArr) {
-      if (this.direct == car.direct){
-        if ((car.x - this.x < 90 && car.x - this.x > 0) || (car.y - this.y < 90 && car.y - this.y > 0)){
-          System.out.printf("x range: %f, y range: %f", car.x- this.x, car.y - this.y);
+      if (this.direct == 4 && car.direct == 4) {
+        if ((car.x - this.x < 90 && car.x - this.x > 0) || (car.y - this.y < 90 && car.y - this.y > 0)) {
+          //System.out.printf("x range: %f, y range: %f", car.x- this.x, car.y - this.y);
+          //System.out.println("");
+          this.speed = 0;
+        }
+      } else if (this.direct == 1 && car.direct == 4) {
+        if ((abs(car.x - this.x) < 60) && (abs(car.y - this.y) < 60)) {
+          System.out.printf("car(x, y): (%f, %f)", car.x, car.y);
           System.out.println("");
+          System.out.printf("this(x, y): (%f, %f)", this.x, this.y);
+          System.out.println("");
+          this.speed = 0;
+        }
+      } else if (this.direct == 1 && car.direct == 1) {
+        if ((car.x - this.x == 0) && (this.y - car.y < 90 && this.y - car.y > 0)) {
+          //System.out.printf("x range: %f, y range: %f", car.x- this.x, car.y - this.y);
+          //System.out.println("");
           this.speed = 0;
         }
       }
     }
   }
-  
+
 
   void move() {
     switch(direct) {
