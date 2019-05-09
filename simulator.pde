@@ -1,3 +1,6 @@
+import java.util.Map;
+import java.util.LinkedList;
+
 ArrayList<Car> carArr = new ArrayList<Car>();
 boolean press_a;
 float[][] axis = {{180, 1000}, {180, 580}, {700, 580}};
@@ -7,8 +10,8 @@ int lastAdd;
 int count = 0;
 
 void setup() {
-  //size(1920, 1080);
-  fullScreen();
+  size(1920, 1080);
+  //fullScreen();
   lastAdd = millis();
 
   img = loadImage("image/background.png");
@@ -26,6 +29,11 @@ void draw() {
   if (mousePressed) {
     System.out.printf("mouseX: %d, mouseY: %d", mouseX, mouseY);
     System.out.println();
+    //for (int i = 0; i < carArr.size(); i ++) {
+    //  Car car = carArr.get(i);
+    //  car.move();
+    //  car.speed = 10;
+    //}
   }
 
   for (int i = 0; i < carArr.size(); i ++) {
@@ -49,15 +57,15 @@ void draw() {
     carArr.add(addCar);
   }
 
-  if (count < 10) {
-    if (millis() - lastAdd > 1000) {
-      Car addCar = new Car(axis, direction);
-      addCar.start();
-      carArr.add(addCar);
-      count++;
-      lastAdd = millis();
-    }
-  }
+  //if (count < 10) {
+  //  if (millis() - lastAdd > 1000) {
+  //    Car addCar = new Car(axis, direction);
+  //    addCar.start();
+  //    carArr.add(addCar);
+  //    count++;
+  //    lastAdd = millis();
+  //  }
+  //}
 }
 
 void keyPressed() {

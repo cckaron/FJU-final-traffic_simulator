@@ -1,5 +1,3 @@
-import java.util.LinkedList;
-
 class Car extends Thread {
   PImage img;
   float x;
@@ -74,7 +72,7 @@ class Car extends Thread {
           this.speed = 0;
         }
       } else if (this.direct == 1 && car.direct == 4) {
-        if ((abs(car.x - this.x) < 60) && (abs(car.y - this.y) < 60)) {
+        if ((abs(car.x - this.x) < 70) && (abs(car.y - this.y) < 70)) {
           System.out.printf("car(x, y): (%f, %f)", car.x, car.y);
           System.out.println("");
           System.out.printf("this(x, y): (%f, %f)", this.x, this.y);
