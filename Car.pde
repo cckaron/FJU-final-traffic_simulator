@@ -1,4 +1,5 @@
 class Car extends Thread {
+  int id;
   PImage img;
   float x;
   float y;
@@ -10,9 +11,10 @@ class Car extends Thread {
   LinkedList<float[]> pathST=new LinkedList<float[]>();
   LinkedList<Integer> directST=new LinkedList<Integer>();
 
-  Car (float[][] axis, int dir[]) {
+  Car (int _id, float[][] axis, int dir[]) {
     img = loadImage("image/dot.png");
     live = true;
+    id = _id;
 
     //add axises to queue
     for (int i=0; i<axis.length; i++) {
@@ -43,9 +45,7 @@ class Car extends Thread {
   }
 
   void go() {
-    if (x == 700 && y == 580) {
-      this.speed = 0;
-    }
+    followRule();
     keepDistance();
     if (x == nextPos[0] && y == nextPos[1]) {
       try {
@@ -54,7 +54,13 @@ class Car extends Thread {
       } 
       catch (Exception e) {
       }
-    } else if (x >= 1920 || x < 0 || y > 1080 || y < 0) {
+    } else if (x >= 1890 || x < 0 || y > 1080 || y < 0) {
+      
+      System.out.printf("Car %d end", id);
+      
+      //!!!!! important !!!!!!
+      //before car died, it should be moved one more time to pretend error occur
+      move();
       live = false;
     } else {
       move();
@@ -64,26 +70,41 @@ class Car extends Thread {
   }
 
   void keepDistance() {
-    for (Car car : carArr) {
-      if (this.direct == 4 && car.direct == 4) {
-        if ((car.x - this.x < 90 && car.x - this.x > 0) || (car.y - this.y < 90 && car.y - this.y > 0)) {
-          //System.out.printf("x range: %f, y range: %f", car.x- this.x, car.y - this.y);
-          //System.out.println("");
-          this.speed = 0;
-        }
-      } else if (this.direct == 1 && car.direct == 4) {
-        if ((abs(car.x - this.x) < 70) && (abs(car.y - this.y) < 70)) {
-          System.out.printf("car(x, y): (%f, %f)", car.x, car.y);
-          System.out.println("");
-          System.out.printf("this(x, y): (%f, %f)", this.x, this.y);
-          System.out.println("");
-          this.speed = 0;
-        }
-      } else if (this.direct == 1 && car.direct == 1) {
-        if ((car.x - this.x == 0) && (this.y - car.y < 90 && this.y - car.y > 0)) {
-          //System.out.printf("x range: %f, y range: %f", car.x- this.x, car.y - this.y);
-          //System.out.println("");
-          this.speed = 0;
+    for (Car otherCar : carArr) {
+      //shouldn't compare with itself
+      if (this.id != otherCar.id) {
+        //go in the same direction
+        if (this.direct == 4 && otherCar.direct == 4) {
+          if (this.id == 3) {
+            System.out.printf("(ot, this):(%f, %f)", otherCar.x, this.x);
+            System.out.println();
+          }
+
+          //not safe distance should stop
+          if ((otherCar.x - this.x < 90 && otherCar.x - this.x > 0) || (otherCar.y - this.y < 90 && otherCar.y - this.y > 0)) 
+          {
+            this.speed = 0;
+          } 
+          //if distance is safe, can restart
+          else if (otherCar.x - this.x > 90 && otherCar.x - this.x > 0 && otherCar.x - this.x < 120|| otherCar.y - this.y > 90) { 
+            //System.out.printf("(x,y):(%f, %f)", car.x - this.x, car.y - this.y);
+            //System.out.println();
+            this.speed = 5;
+          }
+        } else if (this.direct == 1 && otherCar.direct == 4) {
+          if ((abs(otherCar.x - this.x) < 70) && (abs(otherCar.y - this.y) < 70)) {
+            System.out.printf("car(x, y): (%f, %f)", otherCar.x, otherCar.y);
+            System.out.println("");
+            System.out.printf("this(x, y): (%f, %f)", this.x, this.y);
+            System.out.println("");
+            this.speed = 0;
+          }
+        } else if (this.direct == 1 && otherCar.direct == 1) {
+          if ((otherCar.x - this.x == 0) && (this.y - otherCar.y < 90 && this.y - otherCar.y > 0)) {
+            //System.out.printf("x range: %f, y range: %f", car.x- this.x, car.y - this.y);
+            //System.out.println("");
+            this.speed = 0;
+          }
         }
       }
     }
@@ -109,5 +130,14 @@ class Car extends Thread {
 
   boolean alive() {
     return this.live;
+  }
+
+  void followRule() {
+    if (x == 700 && y == 580 && direct == 4 && simulator.timer.now_direct == 2) {
+      //System.out.println("stop");
+      this.speed = 0;
+    } else if (x == 700 && y == 580 && direct == 4 && simulator.timer.now_direct == 1) {
+      this.speed = 5;
+    }
   }
 }

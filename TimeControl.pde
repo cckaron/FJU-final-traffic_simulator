@@ -10,8 +10,8 @@ class TimeControl {
     dir1_default_sec = d1_sec;
     dir2_default_sec = d2_sec;
     last_sec = millis();
-    now_sec = dir1_default_sec;
-    now_direct = 1;
+    now_sec = dir2_default_sec;
+    now_direct = 2;
     trafficlight.put(1, new TrafficLight("red"));
     trafficlight.put(2, new TrafficLight("red"));
     trafficlight.put(3, new TrafficLight("green"));
@@ -39,7 +39,7 @@ class TimeControl {
         tr2.l_color = "green";        
         tr3.l_color = "red";        
         tr4.l_color = "red";
-        now_sec = dir1_default_sec;
+        now_sec = dir2_default_sec;
       } else {
         now_direct = 1;
         TrafficLight tr1 = trafficlight.get(1);
@@ -50,7 +50,7 @@ class TimeControl {
         tr2.l_color = "red";        
         tr3.l_color = "green";        
         tr4.l_color = "green";
-        now_sec = dir2_default_sec;
+        now_sec = dir1_default_sec;
       }
     }
   }
