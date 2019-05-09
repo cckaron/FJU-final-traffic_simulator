@@ -2,8 +2,11 @@ import java.util.Map;
 import java.util.LinkedList;
 
 ArrayList<Car> carArr = new ArrayList<Car>();
+Intersection intersection;
+TimeControl timer;
+
 boolean press_a;
-float[][] axis = {{180, 1000}, {180, 580}, {700, 580}};
+float[][] path = {{180, 1000}, {180, 580}, {700, 580}};
 int[] direction = {1, 4};
 PImage img;
 int lastAdd;
@@ -16,8 +19,13 @@ void setup() {
 
   img = loadImage("image/background.png");
   background(img);
+  
+  intersection = new Intersection();
+  intersection.start();
+  
+  timer = new TimeControl(30, 90);
 
-  carArr.add(new Car(axis, direction));
+  carArr.add(new Car(path, direction));
   for (Car car : carArr) {
     car.start();
   }
@@ -25,15 +33,12 @@ void setup() {
 
 void draw() {
   background(img);
+  timer.countdown();
 
   if (mousePressed) {
-    System.out.printf("mouseX: %d, mouseY: %d", mouseX, mouseY);
-    System.out.println();
-    //for (int i = 0; i < carArr.size(); i ++) {
-    //  Car car = carArr.get(i);
-    //  car.move();
-    //  car.speed = 10;
-    //}
+    //System.out.printf("mouseX: %d, mouseY: %d", mouseX, mouseY);
+    //System.out.println();
+    intersection.getSecCarCount("left", "right");
   }
 
   for (int i = 0; i < carArr.size(); i ++) {
@@ -52,20 +57,20 @@ void draw() {
   //  }
   //}
   if (press_a) {
-    Car addCar = new Car(axis, direction);
+    Car addCar = new Car(path, direction);
     addCar.start();
     carArr.add(addCar);
   }
 
-  //if (count < 10) {
-  //  if (millis() - lastAdd > 1000) {
-  //    Car addCar = new Car(axis, direction);
-  //    addCar.start();
-  //    carArr.add(addCar);
-  //    count++;
-  //    lastAdd = millis();
-  //  }
-  //}
+  if (count < 10) {
+    if (millis() - lastAdd > 800) {
+      Car addCar = new Car(path, direction);
+      addCar.start();
+      carArr.add(addCar);
+      count++;
+      lastAdd = millis();
+    }
+  }
 }
 
 void keyPressed() {
