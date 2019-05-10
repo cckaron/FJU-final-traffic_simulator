@@ -54,4 +54,17 @@ class TimeControl {
       }
     }
   }
+
+  void judgeRule() {
+    int[] carCount= intersection.getSecCarCount("left", "right");
+    println(carCount[0]);
+    println(carCount[1]);
+    GetRequest get = new GetRequest("http://140.136.155.137/judgeRule/1/2/"+carCount[0]+"/"+carCount[1]);
+    get.send();
+    println("Reponse Content: " + get.getContent());
+    
+    if (get.getContent().trim().equals("3")){
+      now_sec = 10;
+    }
+  }
 }

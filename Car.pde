@@ -76,8 +76,8 @@ class Car extends Thread {
         //go in the same direction
         if (this.direct == 4 && otherCar.direct == 4) {
           if (this.id == 3) {
-            System.out.printf("(ot, this):(%f, %f)", otherCar.x, this.x);
-            System.out.println();
+            //System.out.printf("(ot, this):(%f, %f)", otherCar.x, this.x);
+            //System.out.println();
           }
 
           //not safe distance should stop
@@ -93,11 +93,13 @@ class Car extends Thread {
           }
         } else if (this.direct == 1 && otherCar.direct == 4) {
           if ((abs(otherCar.x - this.x) < 70) && (abs(otherCar.y - this.y) < 70)) {
-            System.out.printf("car(x, y): (%f, %f)", otherCar.x, otherCar.y);
-            System.out.println("");
-            System.out.printf("this(x, y): (%f, %f)", this.x, this.y);
-            System.out.println("");
+            //System.out.printf("car(x, y): (%f, %f)", otherCar.x, otherCar.y);
+            //System.out.println("");
+            //System.out.printf("this(x, y): (%f, %f)", this.x, this.y);
+            //System.out.println("");
             this.speed = 0;
+          } else if (abs(otherCar.x - this.x) > 70) {
+            this.speed = 5;
           }
         } else if (this.direct == 1 && otherCar.direct == 1) {
           if ((otherCar.x - this.x == 0) && (this.y - otherCar.y < 90 && this.y - otherCar.y > 0)) {

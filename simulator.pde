@@ -1,5 +1,6 @@
 import java.util.Map;
 import java.util.LinkedList;
+import http.requests.*;
 
 ArrayList<Car> carArr = new ArrayList<Car>();
 Intersection intersection;
@@ -8,6 +9,7 @@ static TimeControl timer;
 boolean press_a;
 float[][] path = {{180, 1000}, {180, 580}, {700, 580}};
 int[] direction = {1, 4};
+
 PImage img;
 int lastAdd;
 int count = 0;
@@ -23,7 +25,7 @@ void setup() {
   intersection = new Intersection();
   intersection.start();
 
-  timer = new TimeControl(5, 10);
+  timer = new TimeControl(20, 90);
 
   carArr.add(new Car(carArr.size()+1, path, direction));
   for (Car car : carArr) {
@@ -35,11 +37,13 @@ void draw() {
   background(img);
   drawTrafficLight();
   timer.countdown();
-
+  intersection.getSecCarCount("left", "right");
+  
   if (mousePressed) {
     System.out.printf("mouseX: %d, mouseY: %d", mouseX, mouseY);
     System.out.println();
     //intersection.getSecCarCount("left", "right");
+    timer.judgeRule();
   }
 
   for (int i = 0; i < carArr.size(); i ++) {
@@ -59,9 +63,9 @@ void draw() {
   //  }
   //}
   if (press_a) {
-    Car addCar = new Car(carArr.size()+1, path, direction);
-    addCar.start();
-    carArr.add(addCar);
+    //Car addCar = new Car(carArr.size()+1, path, direction);
+    //addCar.start();
+    //carArr.add(addCar);
   }
 
   if (count < 10) {

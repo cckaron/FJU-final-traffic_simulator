@@ -10,7 +10,7 @@ class Intersection extends Thread {
     super.start();
   }
 
-  int getSecCarCount(String sec1, String sec2) {
+  int[] getSecCarCount(String sec1, String sec2) {
     int sec1_counter = 0;
     int sec2_counter = 0;
 
@@ -31,7 +31,10 @@ class Intersection extends Thread {
 
     System.out.printf("car(sec1, sec2): (%d, %d)", sec1_counter, sec2_counter);
     System.out.println();
-    return sec1_counter + sec2_counter;
+    int[] ans = {sec1_counter, sec2_counter};
+    
+    showCarInfo(ans);
+    return ans;
   }
 
   void initSection() {
@@ -86,5 +89,12 @@ class Intersection extends Thread {
       Section section = (Section)sec.getValue();
       section.start();
     }
+  }
+  
+  void showCarInfo(int[] count){
+    fill(0);
+    textSize(30);
+    text("Left Section Car:"+count[0], 750, 500);
+    text("Right Section Car:"+count[1], 750, 550);
   }
 }
