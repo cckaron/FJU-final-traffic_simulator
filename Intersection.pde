@@ -29,8 +29,8 @@ class Intersection extends Thread {
       }
     }
 
-    System.out.printf("car(sec1, sec2): (%d, %d)", sec1_counter, sec2_counter);
-    System.out.println();
+    //System.out.printf("car(sec1, sec2): (%d, %d)", sec1_counter, sec2_counter);
+    //System.out.println();
     int[] ans = {sec1_counter, sec2_counter};
     
     showCarInfo(ans);

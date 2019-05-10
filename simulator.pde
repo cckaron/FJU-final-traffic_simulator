@@ -7,8 +7,11 @@ Intersection intersection;
 static TimeControl timer;
 
 boolean press_a;
-float[][] path = {{180, 1000}, {180, 580}, {700, 580}};
+float[][] path = {{180, 1000}, {180, 580}, {1920, 580}};
 int[] direction = {1, 4};
+
+float[][] path1 = {{1540, 20}, {1540, 450}, {200, 450}, {180, 0}};
+int[] direction1 = {2, 3, 1};
 
 PImage img;
 int lastAdd;
@@ -25,12 +28,7 @@ void setup() {
   intersection = new Intersection();
   intersection.start();
 
-  timer = new TimeControl(20, 90);
-
-  carArr.add(new Car(carArr.size()+1, path, direction));
-  for (Car car : carArr) {
-    car.start();
-  }
+  timer = new TimeControl(10, 30);
 }
 
 void draw() {
@@ -38,7 +36,7 @@ void draw() {
   drawTrafficLight();
   timer.countdown();
   intersection.getSecCarCount("left", "right");
-  
+
   if (mousePressed) {
     System.out.printf("mouseX: %d, mouseY: %d", mouseX, mouseY);
     System.out.println();
@@ -51,6 +49,7 @@ void draw() {
     if (car.alive()) {
       car.go();
     } else {
+      count -= 2;
       carArr.remove(i);
       System.out.println("remove");
     }
@@ -68,14 +67,20 @@ void draw() {
     //carArr.add(addCar);
   }
 
-  if (count < 10) {
-    if (millis() - lastAdd > 1500) {
-      Car addCar = new Car(carArr.size()+1, path, direction);
+
+  if (millis() - lastAdd > 500) {
+    if (count < 20) {
+      Car addCar = new Car(carArr.size(), path, direction);
       addCar.start();
       carArr.add(addCar);
-      count++;
-      lastAdd = millis();
+      
+      Car addCar1 = new Car(carArr.size()+1, path1, direction1);
+      addCar1.start();
+      carArr.add(addCar1);
+      
+      count += 2;
     }
+    lastAdd = millis();
   }
 }
 
@@ -105,7 +110,7 @@ void drawTrafficLight() {
   rect(1028, 290, 100, 100);
   //down-left
   rect(630, 690, 100, 100);
-  //down-righy
+  //down-right
   rect(1028, 690, 100, 100);
 
   //show seconds
@@ -127,21 +132,19 @@ void drawTrafficLight() {
     circle(680, 230, 70);
     //down-right
     circle(1080, 850, 70);
-     
+
     fill(0, 255, 0);
     //up-right
     circle(1080, 230, 70);
     //down-left
     circle(680, 850, 70);
-    
-    
   } else {
     fill(0, 255, 0);
     //up-left
     circle(680, 230, 70);
     //down-right
     circle(1080, 850, 70);
-     
+
     fill(255, 0, 0);
     //up-right
     circle(1080, 230, 70);
