@@ -91,6 +91,7 @@ class Intersection extends Thread {
     }
   }
   
+  //TODO
   void showCarInfo(int[] count){
     fill(0);
     textSize(30);

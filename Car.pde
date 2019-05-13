@@ -1,5 +1,7 @@
 class Car extends Thread {
   int id;
+  int goParam = 120;
+  int turnParam = 70;
   PImage img;
   float x;
   float y;
@@ -42,7 +44,25 @@ class Car extends Thread {
   }
 
   void show() {
-    image(this.img, this.x, this.y, 50, 50);
+    switch (direct){
+      case 1:
+        img = loadImage("image/car-up.jpg");
+        image(this.img, this.x, this.y, 25, 50);
+        break;
+      case 2:
+        img = loadImage("image/car-down.jpg");
+        image(this.img, this.x, this.y, 25, 50);
+        break;
+      case 3:
+        img = loadImage("image/car-left.jpg");
+        image(this.img, this.x, this.y, 50, 25);
+        break;
+      case 4:
+        img = loadImage("image/car-right.jpg");
+        image(this.img, this.x, this.y, 50, 25);
+        break;
+    }
+    
   }
 
   void go() {
@@ -61,9 +81,10 @@ class Car extends Thread {
 
           live = false;
           System.out.printf("Car %d end", id);
+        } else {
+          nextPos = pathST.remove();
+          direct = directST.remove();
         }
-        nextPos = pathST.remove();
-        direct = directST.remove();
         //move();
       } 
       catch (Exception e) {
@@ -95,12 +116,37 @@ class Car extends Thread {
 
         //two car in the corner
         //turn right from bottom
+        if (turnLeftFromBottom(otherCar)) {
+          return false;
+        };
+
         if (turnRightFromBottom(otherCar)) {
           return false;
         };
+
+        if (turnLeftFromTop(otherCar)) {
+          return false;
+        };
+
         if (turnRightFromTop(otherCar)) {
           return false;
         };
+
+        if (turnLeftFromLeft(otherCar)) {
+          return false;
+        };
+
+        //if (turnRightFromLeft(otherCar)) {
+        //  return false;
+        //};
+
+        if (turnLeftFromRight(otherCar)) {
+          return false;
+        };
+
+        //if (turnRightFromRight(otherCar)) {
+        //  return false;
+        //};
       }
     }
     return true;
@@ -151,33 +197,33 @@ class Car extends Thread {
     {
       //compare distance with the front car, stop when not safe
       // you are in front of me.
-      if ((this.y - otherCar.y < 90 && this.y - otherCar.y > 0)) 
+      if ((this.y - otherCar.y < goParam && this.y - otherCar.y > 0)) 
       {
         this.speed = 0;
         return true;
       } 
       //you leave me, and I will trace you.
-      else if (this.y - otherCar.y > 90 && this.y - otherCar.y < 120) { 
+      else if (this.y - otherCar.y > goParam && this.y - otherCar.y < goParam+10) { 
         this.speed = 5;
         return false;
       }
     }
     return false;
   }
-  
-    boolean direct2NotSafe(Car otherCar) {
+
+  boolean direct2NotSafe(Car otherCar) {
     //go in the same direction
     if (this.direct == 2 && otherCar.direct == 2) 
     {
       //compare distance with the front car, stop when not safe
       // you are in front of me.
-      if ((otherCar.y - this.y < 90 && otherCar.y - this.y > 0)) 
+      if ((otherCar.y - this.y < goParam && otherCar.y - this.y > 0)) 
       {
         this.speed = 0;
         return true;
       } 
       //you leave me, and I will trace you.
-      else if (otherCar.y - this.y > 90 && otherCar.y - this.y < 120) { 
+      else if (otherCar.y - this.y > goParam && otherCar.y - this.y < goParam+10) { 
         this.speed = 5;
         return false;
       }
@@ -189,31 +235,31 @@ class Car extends Thread {
     if (this.direct == 3 && otherCar.direct == 3) {
       //compare distance with the front car, stop when not safe
       // you are in front of me.
-      if ((this.x - otherCar.x < 90 && this.x - otherCar.x > 0)) 
+      if ((this.x - otherCar.x < goParam && this.x - otherCar.x > 0)) 
       {
         this.speed = 0;
         return true;
       } 
       //you leave me, and I will trace you.
-      else if (this.x - otherCar.x > 90 && this.x - otherCar.x < 120) { 
+      else if (this.x - otherCar.x > goParam && this.x - otherCar.x < goParam+10) { 
         this.speed = 5;
         return false;
       }
     }
     return false;
   }
-  
+
   boolean direct4NotSafe(Car otherCar) {
     if (this.direct == 4 && otherCar.direct == 4) {
       //compare distance with the front car, stop when not safe
       // you are in front of me.
-      if (otherCar.x - this.x < 90 && otherCar.x - this.x > 50) 
+      if (otherCar.x - this.x < goParam && otherCar.x - this.x > 0) 
       {
         this.speed = 0;
         return true;
       } 
       //you leave me, and I will trace you.
-      else if (otherCar.x - this.x > 120 && otherCar.x - this.x < 150) { 
+      else if (otherCar.x - this.x > goParam && otherCar.x - this.x < goParam + 10) { 
         this.speed = 5;
         return false;
       }
@@ -224,23 +270,101 @@ class Car extends Thread {
   boolean turnRightFromBottom(Car otherCar) {
     if (this.direct == 1 && otherCar.direct == 4) 
     {
-      if ((abs(otherCar.x - this.x) < 70) && (abs(otherCar.y - this.y) < 70)) {
+      if ((this.y - otherCar.y  < turnParam) && (otherCar.x - this.x < turnParam && otherCar.x - this.x > 0)) {
         this.speed = 0;
         return true;
-      } else if (abs(otherCar.x - this.x) > 70) {
+      } else if (otherCar.x - this.x > turnParam) {
         this.speed = 5;
       }
     }
     return false;
   }
-  
+
+  boolean turnLeftFromBottom(Car otherCar) {
+    if (this.direct == 1 && otherCar.direct == 3) 
+    {
+      if ((this.y - otherCar.y < turnParam) && (this.x - otherCar.x < turnParam && this.x - otherCar.x > 0)) {
+        this.speed = 0;
+        return true;
+      } else if (this.x - otherCar.x > turnParam) {
+        this.speed = 5;
+      }
+    }
+    return false;
+  }
+
+  boolean turnLeftFromTop(Car otherCar) {
+    if (this.direct == 2 && otherCar.direct == 4) 
+    {
+      if ((otherCar.y - this.y < turnParam) && (otherCar.x - this.x < turnParam && otherCar.x - this.x > 0)) {
+        this.speed = 0;
+        return true;
+      } else if (otherCar.x - this.x > turnParam) {
+        this.speed = 5;
+      }
+    }
+    return false;
+  }
+
   boolean turnRightFromTop(Car otherCar) {
     if (this.direct == 2 && otherCar.direct == 3) 
     {
-      if ((abs(otherCar.x - this.x) < 70) && (abs(otherCar.y - this.y) < 70)) {
+      if ((otherCar.y - this.y < turnParam) && (this.x - otherCar.x < turnParam && this.x - otherCar.x > 0)) {
         this.speed = 0;
         return true;
-      } else if (abs(otherCar.x - this.x) > 70) {
+      } else if (this.x - otherCar.x > turnParam) {
+        this.speed = 5;
+      }
+    }
+    return false;
+  }
+
+  boolean turnLeftFromRight(Car otherCar) {
+    if (this.direct == 3 && otherCar.direct == 2) 
+    {
+      if ((this.x - otherCar.x < turnParam) && (otherCar.y - this.y < turnParam && otherCar.y - this.y > 0)) {
+        this.speed = 0;
+        return true;
+      } else if (otherCar.y - this.y > turnParam) {
+        this.speed = 5;
+      }
+    }
+    return false;
+  }
+
+  boolean turnRightFromRight(Car otherCar) {
+    if (this.direct == 3 && otherCar.direct == 1) 
+    {
+      if ((this.x - otherCar.x < turnParam) && (this.y - otherCar.y < turnParam && this.y - otherCar.y > 0)) {
+        this.speed = 0;
+        return true;
+      } else if (this.y - otherCar.y > turnParam) {
+        this.speed = 5;
+      }
+    }
+    return false;
+  }
+
+  boolean turnRightFromLeft(Car otherCar) {
+    if (this.direct == 4 && otherCar.direct == 1) 
+    {
+      if ((otherCar.x - this.x < turnParam) && (otherCar.y - this.y < turnParam && otherCar.y - this.y > 0)) {
+        this.speed = 0;
+        return true;
+      } else if (this.y - otherCar.y > turnParam) {
+        this.speed = 5;
+      }
+    }
+    return false;
+  }
+
+  boolean turnLeftFromLeft(Car otherCar) {
+    if (this.direct == 4 && otherCar.direct == 1) 
+    {
+      if ((otherCar.x - this.x < turnParam) && (this.y - otherCar.y > 0)) {
+        this.speed = 0;
+        return true;
+      } else if (this.y - otherCar.y > turnParam) {
         this.speed = 5;
       }
     }
