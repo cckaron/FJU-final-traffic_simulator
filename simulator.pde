@@ -49,7 +49,7 @@ void setup() {
   intersection = new Intersection();
   intersection.start();
 
-  timer = new TimeControl(10, 10); //dir1, dir2
+  timer = new TimeControl(10, 30); //dir1, dir2
 }
 
 void draw() {
@@ -94,7 +94,7 @@ void draw() {
   if (millis() - lastAdd > 500) {
     Random ran = new Random();
     int pid = ran.nextInt(4)+1;
-    if (count < 2) {
+    if (count < 20) {
       if (pid == 1) {
         Car addCar = new Car(carArr.size(), path_a1, direction_a1);
         addCar.start();

@@ -3,6 +3,10 @@ class Car extends Thread {
   int goParam = 120;
   int turnParam = 70;
   PImage img;
+  PImage up;
+  PImage down;
+  PImage left;
+  PImage right;
   float x;
   float y;
   int direct;
@@ -14,7 +18,10 @@ class Car extends Thread {
   LinkedList<Integer> directST=new LinkedList<Integer>();
 
   Car (int _id, float[][] axis, int dir[]) {
-    img = loadImage("image/dot.png");
+    up = loadImage("image/car-up.jpg");
+    down = loadImage("image/car-down.jpg");
+    left = loadImage("image/car-left.jpg");
+    right = loadImage("image/car-right.jpg");
     live = true;
     id = _id;
 
@@ -44,25 +51,20 @@ class Car extends Thread {
   }
 
   void show() {
-    switch (direct){
-      case 1:
-        img = loadImage("image/car-up.jpg");
-        image(this.img, this.x, this.y, 25, 50);
-        break;
-      case 2:
-        img = loadImage("image/car-down.jpg");
-        image(this.img, this.x, this.y, 25, 50);
-        break;
-      case 3:
-        img = loadImage("image/car-left.jpg");
-        image(this.img, this.x, this.y, 50, 25);
-        break;
-      case 4:
-        img = loadImage("image/car-right.jpg");
-        image(this.img, this.x, this.y, 50, 25);
-        break;
+    switch (direct) {
+    case 1:
+      image(this.up, this.x, this.y, 44, 90);
+      break;
+    case 2:
+      image(this.down, this.x, this.y, 44, 90);
+      break;
+    case 3:
+      image(this.left, this.x, this.y, 90, 46);
+      break;
+    case 4:
+      image(this.right, this.x, this.y, 90, 46);
+      break;
     }
-    
   }
 
   void go() {
@@ -116,33 +118,33 @@ class Car extends Thread {
 
         //two car in the corner
         //turn right from bottom
-        if (turnLeftFromBottom(otherCar)) {
-          return false;
-        };
+        //if (turnLeftFromBottom(otherCar)) {
+        //  return false;
+        //};
 
         if (turnRightFromBottom(otherCar)) {
           return false;
         };
 
-        if (turnLeftFromTop(otherCar)) {
-          return false;
-        };
+        //if (turnLeftFromTop(otherCar)) {
+        //  return false;
+        //};
 
         if (turnRightFromTop(otherCar)) {
           return false;
         };
 
-        if (turnLeftFromLeft(otherCar)) {
-          return false;
-        };
+        //if (turnLeftFromLeft(otherCar)) {
+        //  return false;
+        //};
 
         //if (turnRightFromLeft(otherCar)) {
         //  return false;
         //};
 
-        if (turnLeftFromRight(otherCar)) {
-          return false;
-        };
+        //if (turnLeftFromRight(otherCar)) {
+        //  return false;
+        //};
 
         //if (turnRightFromRight(otherCar)) {
         //  return false;
@@ -270,10 +272,10 @@ class Car extends Thread {
   boolean turnRightFromBottom(Car otherCar) {
     if (this.direct == 1 && otherCar.direct == 4) 
     {
-      if ((this.y - otherCar.y  < turnParam) && (otherCar.x - this.x < turnParam && otherCar.x - this.x > 0)) {
+      if ((this.y - otherCar.y  < turnParam && this.y - otherCar.y > 0) && (otherCar.x - this.x < turnParam && otherCar.x - this.x > 0)) {
         this.speed = 0;
         return true;
-      } else if (otherCar.x - this.x > turnParam) {
+      } else if (otherCar.x - this.x > turnParam && otherCar.x - this.x < turnParam + 10) {
         this.speed = 5;
       }
     }
@@ -308,14 +310,13 @@ class Car extends Thread {
 
   boolean turnRightFromTop(Car otherCar) {
     if (this.direct == 2 && otherCar.direct == 3) 
-    {
-      if ((otherCar.y - this.y < turnParam) && (this.x - otherCar.x < turnParam && this.x - otherCar.x > 0)) {
+      if ((otherCar.y - this.y  < turnParam && otherCar.y - this.y > 0) && (this.x - otherCar.x < turnParam && this.x - otherCar.x > 0)) {
         this.speed = 0;
         return true;
-      } else if (this.x - otherCar.x > turnParam) {
+      } else if (this.x - otherCar.x > turnParam && this.x - otherCar.x < turnParam + 10) {
         this.speed = 5;
+        print("yes");
       }
-    }
     return false;
   }
 
